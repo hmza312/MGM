@@ -25,8 +25,8 @@ const TransferTables = () => {
     const withJWT = true;
     try {
       const data = await getRequest(mytrans(), withJWT);
-      console.log(data.data.data);
-      setData(data.data.data);
+      console.log(data.data.allTransactions);
+      setData(data.data.allTransactions);
 
       disableLoading();
     } catch (e) {
@@ -48,9 +48,9 @@ const TransferTables = () => {
     doc.setFontSize(15);
 
     const title = "My Transfer Report";
-    const headers = [["Date", "Amount", "User"]];
+    const headers = [["Transaction Date", "Sent Amount", "Transferred To"]];
 
-    const tableData = data.map((elt) => [elt.createdAt, elt.amount, "Machine"]);
+    const tableData = data.map((elt) => [elt.createdAt, elt.amountToBeProcessed, elt.transactionTo]);
 
     let content = {
       startY: 50,
@@ -78,17 +78,17 @@ const TransferTables = () => {
           <Table className="no-wrap mt-3 align-middle" responsive borderless>
             <thead>
               <tr>
-                <th>Date</th>
-                <th>Amount</th>
-                <th>User</th>
+                <th>Transaction Date</th>
+                <th>Sent Amount</th>
+                <th>Transferred To</th>
               </tr>
             </thead>
             <tbody>
               {data?.map((item) => (
                 <tr>
                   <th>{moment(item.createdAt).toISOString()}</th>
-                  <th>{item.amount}</th>
-                  <td>Machine</td>
+                  <th>{item.amountToBeProcessed}</th>
+                  <td>{item.transactionTo}</td>
                 </tr>
               ))}
             </tbody>
