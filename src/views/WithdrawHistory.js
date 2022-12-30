@@ -10,7 +10,7 @@ import {
   Input,
   Label,
 } from "reactstrap";
-import { mytrans } from "../api/Users";
+import { allwithdraw } from "../api/Users";
 
 import { UseLoadingHook } from "../hooks";
 import { getRequest } from "../services/apiClient";
@@ -18,8 +18,9 @@ import jsPDF from "jspdf";
 import "jspdf-autotable";
 import LineChart from "../views/Chart";
 import moment from "moment/moment";
+import { mytrans } from "../api/Users";
 
-const WithdrawHistory = () => {
+const ProjectTables = () => {
   const { isLoading, enableLoading, disableLoading } = UseLoadingHook();
   const [data, setData] = useState([]);
   const [series, setSeries] = useState([]);
@@ -28,13 +29,13 @@ const WithdrawHistory = () => {
     const singleData = data.filter((item) => item.amount === parseInt(name));
     console.log(singleData);
     const dataSingle = [
-      singleData[0].count10,
-      singleData[0].count20,
-      singleData[0].count50,
-      singleData[0].count100,
-      singleData[0].count500,
-      singleData[0].count1000,
-      singleData[0].count5000,
+      singleData[0].countOfTen,
+      singleData[0].countOfTwenty,
+      singleData[0].countOfFifty,
+      singleData[0].countOfHundrend,
+      singleData[0].countOfFiveHundrend,
+      singleData[0].countOfThousand,
+      singleData[0].countOfFiveThousand,
     ];
     console.log(dataSingle);
     const array = [{ data: dataSingle }];
@@ -45,19 +46,19 @@ const WithdrawHistory = () => {
     const withJWT = true;
     try {
       const {
-        data: { data },
-      } = await getRequest(mytrans(), withJWT);
-      setData(data);
-      const singleData = data[0];
+        data: { allTransactions },
+      } = await getRequest(allwithdraw(), withJWT);
+      setData(allTransactions);
+      const singleData = allTransactions[0];
 
       const dataSingle = [
-        singleData.count10,
-        singleData.count20,
-        singleData.count50,
-        singleData.count100,
-        singleData.count500,
-        singleData.count1000,
-        singleData.count5000,
+        singleData.countOfTen,
+        singleData.countOfTwenty,
+        singleData.countOfFifty,
+        singleData.countOfHundrend,
+        singleData.countOfFiveHundrend,
+        singleData.countOfThousand,
+        singleData.countOfFiveThousand,
       ];
       console.log(dataSingle);
       const array = [{ data: dataSingle }];
@@ -99,13 +100,13 @@ const WithdrawHistory = () => {
     const tableData = data.map((elt) => [
       elt.createdAt,
       elt.amount,
-      elt.count10,
-      elt.count20,
-      elt.count50,
-      elt.count100,
-      elt.count500,
-      elt.count1000,
-      elt.count5000,
+      elt.countOfTen,
+      elt.countOfTwenty,
+      elt.countOfFifty,
+      elt.countOfHundrend,
+      elt.countOfFiveHundrend,
+      elt.countOfThousand,
+      elt.countOfFiveThousand,
     ]);
 
     let content = {
@@ -146,17 +147,29 @@ const WithdrawHistory = () => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((item) => (
+              {data.map((item) => (
                 <tr>
                   <th>{moment(item.createdAt).toISOString()}</th>
-                  <th>{item.amount}</th>
-                  <td>{item.count10 === 0 ? "-" : item.count10}</td>
-                  <td>{item.count20 === 0 ? "-" : item.count20}</td>
-                  <td>{item.count50 === 0 ? "-" : item.count50}</td>
-                  <td>{item.count100 === 0 ? "-" : item.count100}</td>
-                  <td>{item.count500 === 0 ? "-" : item.count500}</td>
-                  <td>{item.count1000 === 0 ? "-" : item.count1000}</td>
-                  <td>{item.count5000 === 0 ? "-" : item.count5000}</td>
+                  <th>{item.amountToBeProcessed}</th>
+                  <td>{item.countOfTen === 0 ? "-" : item.countOfTen}</td>
+                  <td>{item.countOfTwenty === 0 ? "-" : item.countOfTwenty}</td>
+                  <td>{item.countOfFifty === 0 ? "-" : item.countOfFifty}</td>
+                  <td>
+                    {item.countOfHundrend === 0 ? "-" : item.countOfHundrend}
+                  </td>
+                  <td>
+                    {item.countOfFiveHundrend === 0
+                      ? "-"
+                      : item.countOfFiveHundrend}
+                  </td>
+                  <td>
+                    {item.countOfThousand === 0 ? "-" : item.countOfThousand}
+                  </td>
+                  <td>
+                    {item.countOfFiveThousand === 0
+                      ? "-"
+                      : item.countOfFiveThousand}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -172,7 +185,9 @@ const WithdrawHistory = () => {
           onChange={handleData}
         >
           {data.map((item) => (
-            <option value={item.amount}>{item.amount}</option>
+            <option value={item.amountToBeProcessed}>
+              {item.amountToBeProcessed}
+            </option>
           ))}
         </Input>
       </FormGroup>
@@ -181,4 +196,4 @@ const WithdrawHistory = () => {
   );
 };
 
-export default WithdrawHistory;
+export default ProjectTables;

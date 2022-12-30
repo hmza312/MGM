@@ -61,7 +61,7 @@ const WithdrawMoney = () => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    setAmount(user.totalAmount);
+    setAmount(user.accountBalance);
   }, []);
 
   const handlePrice = (value) => {
