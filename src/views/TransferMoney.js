@@ -25,9 +25,8 @@ const CheckoutForm = () => {
     event.preventDefault();
     const user = JSON.parse(localStorage.getItem("user"));
     const values = {
-      username: username,
-      amount: parseInt(amount),
-      _id: user._id,
+      transactionTo: username,
+      amountToBeProcessed: parseInt(amount),
     };
     if (elements == null) {
       return;

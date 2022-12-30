@@ -13,7 +13,7 @@ const App = () => {
   const isAdmins = JSON.parse(localStorage.getItem("user"));
   console.log(authenticated);
   if (authenticated) {
-    if (isAdmins.isAdmin) {
+    if (isAdmins.role) {
       routing = useRoutes(Themeroutes);
     } else {
       routing = useRoutes(ThemeRoutesUser);

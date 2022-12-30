@@ -139,7 +139,7 @@ const Sidebar = ({ logout }) => {
       </div>
       <div className="pt-4 mt-2">
         <Nav vertical className="sidebarNav">
-          {isAdmins.isAdmin ? (
+          {isAdmins.role ? (
             <>
               {navigationAdmin.map((navi, index) => (
                 <NavItem key={index} className="sidenav-bg">

@@ -18,6 +18,9 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 const Register = () => {
   const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [balance, setBalance] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [conirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
@@ -39,7 +42,10 @@ const Register = () => {
     const values = {
       username: username,
       password: password,
-      isAdmin: false,
+      emai: email,
+      phone: phone,
+      accountBalance: balance,
+      role: false,
     };
     enableLoading();
     try {
@@ -76,6 +82,16 @@ const Register = () => {
           <Row>
             <Form>
               <FormGroup>
+                <Label for="exampleEmail">Email</Label>
+                <Input
+                  id="exampleEmail"
+                  name="email"
+                  placeholder="Email Here"
+                  type="text"
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </FormGroup>
+              <FormGroup>
                 <Label for="exampleEmail">Username</Label>
                 <Input
                   id="exampleEmail"
@@ -85,12 +101,13 @@ const Register = () => {
                   onChange={(event) => setUsername(event.target.value)}
                 />
               </FormGroup>
+
               <FormGroup>
                 <Label for="examplePassword">Password</Label>
                 <Input
                   id="examplePassword"
                   name="password"
-                  placeholder="password "
+                  placeholder="Password "
                   type="password"
                   onChange={(event) => setPassword(event.target.value)}
                 />
@@ -105,6 +122,27 @@ const Register = () => {
                   onChange={handleConfirmPassword}
                 />
                 {error != "" && <span>{error}</span>}
+              </FormGroup>
+
+              <FormGroup>
+                <Label for="exampleEmail">Current Balance</Label>
+                <Input
+                  id="exampleEmail"
+                  name="balance"
+                  placeholder="Current Balance Here"
+                  type="number"
+                  onChange={(event) => setBalance(event.target.value)}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="exampleEmail">Phone Number</Label>
+                <Input
+                  id="exampleEmail"
+                  name="phone"
+                  placeholder=" Phone Number Here"
+                  type="number"
+                  onChange={(event) => setPhone(event.target.value)}
+                />
               </FormGroup>
               <Button onClick={handleRegister}>
                 Register{" "}

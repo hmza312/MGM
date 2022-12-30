@@ -17,6 +17,15 @@ import { UseLoadingHook } from "../hooks";
 import { withdraw } from "../api/Blog";
 import { postRequest } from "../services/apiClient";
 let total = 0;
+let limits = {
+  5000: 100,
+  1000: 100,
+  500: 100,
+  100: 100,
+  50: 100,
+  20: 100,
+  10: 100,
+};
 const ExchangeMoney = () => {
   const { isLoading, enableLoading, disableLoading } = UseLoadingHook();
   const [count10, setCount10] = useState(0);
@@ -27,7 +36,28 @@ const ExchangeMoney = () => {
   const [count1000, setCount1000] = useState(0);
   const [count5000, setCount5000] = useState(0);
   const [amount, setAmount] = useState("");
+  const [possibleOptions, setPossibleOptions] = useState({});
   const [changed, setHasChanged] = useState(false);
+  const getMoney = () => {
+    let recur = (amount, nominals) => {
+      if (amount == 0) return {}; // success
+      if (!nominals.length) return; // failure
+      let nominal = nominals[0];
+      let count = Math.min(limits[nominal], Math.floor(amount / nominal));
+      for (let i = count; i >= 0; i--) {
+        let result = recur(amount - i * nominal, nominals.slice(1));
+        if (result) return i ? { [nominal]: i, ...result } : result;
+      }
+    };
+    const data = recur(
+      amount,
+      Object.keys(limits)
+        .map(Number)
+        .sort((a, b) => b - a)
+    );
+    setPossibleOptions(data);
+  };
+
   const handlePrice = (value) => {
     if (total < amount) {
       if (value === 10) {
@@ -121,88 +151,140 @@ const ExchangeMoney = () => {
                   type="number"
                 />
               </FormGroup>
+              <Button
+                className="btn"
+                color="primary"
+                type="button"
+                onClick={getMoney}
+              >
+                Check Options{" "}
+              </Button>
+              <br />
+              <Label for="exampleEmail">Possible Options for Transaction</Label>
+              {Object.entries(possibleOptions).length === 0 ? (
+                ""
+              ) : (
+                <>
+                  <br />
+                  <br />
+                  <span>
+                    {Object.keys(possibleOptions) // get keys as an array
+                      .map((key) => {
+                        return (
+                          <span
+                            style={{
+                              padding: " 1rem",
+                              border: "1px solid black",
+                              margin: "1rem",
+                            }}
+                          >
+                            {key}:{"  "}
+                            {possibleOptions[key]}
+                          </span>
+                        ); // convert to integer number
+                      })}
+                  </span>
+                  <br />
+                  <br />
+                </>
+              )}
+
               <Label for="exampleEmail">Choose Amount Type</Label>
               <Row className="mb-2">
                 <Col>
                   {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(10)}
-                    disabled={changed === true ? true : false}
-                  >
-                    10 Rupees
-                  </Button>
+                  {amount >= 10 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(10)}
+                      disabled={changed === true ? true : false}
+                    >
+                      10 Rupees
+                    </Button>
+                  )}
                 </Col>
                 <Col>
                   {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(20)}
-                    disabled={changed === true ? true : false}
-                  >
-                    20 Rupees
-                  </Button>
+                  {amount >= 20 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(20)}
+                      disabled={changed === true ? true : false}
+                    >
+                      20 Rupees
+                    </Button>
+                  )}
                 </Col>
                 <Col>
                   {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(50)}
-                    disabled={changed === true ? true : false}
-                  >
-                    50 Rupees
-                  </Button>
-                </Col>
-              </Row>
-              <Row className="mb-2">
-                <Col>
-                  {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(100)}
-                    disabled={changed === true ? true : false}
-                  >
-                    100 Rupees
-                  </Button>
-                </Col>
-                <Col>
-                  {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(500)}
-                    disabled={changed === true ? true : false}
-                  >
-                    500 Rupees
-                  </Button>
-                </Col>
-                <Col>
-                  {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(1000)}
-                    disabled={changed === true ? true : false}
-                  >
-                    1000 Rupees
-                  </Button>
+                  {amount >= 50 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(50)}
+                      disabled={changed === true ? true : false}
+                    >
+                      50 Rupees
+                    </Button>
+                  )}
                 </Col>
               </Row>
               <Row className="mb-2">
                 <Col>
                   {" "}
-                  <Button
-                    className="btn"
-                    color="success"
-                    onClick={() => handlePrice(5000)}
-                    disabled={changed === true ? true : false}
-                  >
-                    5000 Rupees
-                  </Button>
+                  {amount >= 100 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(100)}
+                      disabled={changed === true ? true : false}
+                    >
+                      100 Rupees
+                    </Button>
+                  )}
+                </Col>
+                <Col>
+                  {" "}
+                  {amount >= 500 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(500)}
+                      disabled={changed === true ? true : false}
+                    >
+                      500 Rupees
+                    </Button>
+                  )}
+                </Col>
+                <Col>
+                  {" "}
+                  {amount >= 1000 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(1000)}
+                      disabled={changed === true ? true : false}
+                    >
+                      1000 Rupees
+                    </Button>
+                  )}
+                </Col>
+              </Row>
+              <Row className="mb-2">
+                <Col>
+                  {" "}
+                  {amount >= 5000 && (
+                    <Button
+                      className="btn"
+                      color="success"
+                      onClick={() => handlePrice(5000)}
+                      disabled={changed === true ? true : false}
+                    >
+                      5000 Rupees
+                    </Button>
+                  )}
                 </Col>
               </Row>
               <FormGroup>
