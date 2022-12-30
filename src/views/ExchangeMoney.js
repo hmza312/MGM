@@ -16,6 +16,7 @@ import ComponentCard from "../components/ComponentCard";
 import { UseLoadingHook } from "../hooks";
 import { withdraw } from "../api/Blog";
 import { postRequest } from "../services/apiClient";
+import { exchangeMoney } from "../api/Users";
 let total = 0;
 let limits = {
   5000: 100,
@@ -94,7 +95,7 @@ const ExchangeMoney = () => {
       setHasChanged(true);
     }
   };
-  const handleWithdraw = async () => {
+  const handleexchangeMoney = async () => {
     const user = JSON.parse(localStorage.getItem("user"));
     const values = {
       amount: parseInt(amount),
@@ -112,7 +113,7 @@ const ExchangeMoney = () => {
     try {
       const {
         data: { message },
-      } = await postRequest(withdraw(), values, withJWT);
+      } = await postRequest(exchangeMoney(), values, withJWT);
 
       Swal.fire({
         text: message,
@@ -323,7 +324,7 @@ const ExchangeMoney = () => {
                 className="btn"
                 color="primary"
                 type="button"
-                onClick={handleWithdraw}
+                onClick={handleexchangeMoney}
               >
                 Exchange{" "}
                 {isLoading && (
